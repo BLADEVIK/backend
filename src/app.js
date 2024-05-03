@@ -1,21 +1,58 @@
 const http = require("http");
-const getUsers = require("./modules/users");
+const getUsers = require("./modules/users.js");
+
+const port = 3003;
+const hostname = "http://127.0.0.1";
+
 const server = http.createServer((request, response) => {
-  if (request.url === "/users") {
-    response.status = 200;
-    response.statusMessage = "OK";
-    response.header = "Content-Type: application/json";
-    response.write(getUsers());
+  const ipAddress = "http://127.0.0.1";
+  const url = new URL(request.url, ipAddress);
+  const userName = url.searchParams.get("hello");
+
+  if (userName) {
+    response.statusCode = 200;
+    response.statusMessage = "ok";
+    response.setHeader("Content-Type", "text/plain");
+    response.write(`Hello,${userName}`);
     response.end();
     return;
   }
-  response.status = 200;
-  response.statusMessage = "OK";
-  response.header = "Content-Type: text/plain";
-  response.write("Hello,Wold!");
-  response.end();
+
+  switch (request.url) {
+    case "/users":
+      response.statusCode = 200;
+      response.statusMessage = "OK";
+      response.setHeader("Content-Type", "application/json");
+      response.write(getUsers());
+      response.end();
+      break;
+
+    case "/?hello":
+      response.statusCode = 400;
+      response.statusMessage = "Enter a name";
+      response.setHeader("Content-Type", "text/plain");
+      response.write("Enter a name");
+      response.end();
+      break;
+
+    case "/":
+      response.statusCode = 200;
+      response.statusMessage = "OK";
+      response.setHeader("Content-Type", "text/plain");
+      response.write("Hello world");
+      response.end();
+      break;
+
+    default:
+      response.statusCode = 500;
+      response.statusMessage = "Server Error";
+      response.setHeader("Content-Type", "text/plain");
+      response.write("");
+      response.end();
+      break;
+  }
 });
 
-server.listen(3003, () => {
-  console.log("Сервер запущен по адрессу http://127.0.0.1:3003");
+server.listen(port, () => {
+  console.log(`Сервер запущен по адресу ${hostname}:${port}/`);
 });
