@@ -1,5 +1,6 @@
 const getUsers = (request, response) => {};
 const getUser = (request, response) => {
+  response.status(200);
   const { user_id } = request.params;
   response.status(200);
   response.send(`User with id: ${user_id} `);
