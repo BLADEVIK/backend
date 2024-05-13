@@ -48,7 +48,7 @@ const deleteBook = (req, res) => {
     const { book_id } = req.params;
     Book.findByIdAndDelete(book_id)
     .then(book => {
-        res.status(200).send('Done');
+        res.status(200).send('Done book');
     })
     .catch(e => {
         res.status(500).send(e.message);
